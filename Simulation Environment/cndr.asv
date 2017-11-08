@@ -1,9 +1,9 @@
 %Simnple cylinder and plane VF with decayivation functions
-classdef cndr
+classdef cndr    
     properties
         active = true
         normComponents = true
-        
+  
         %Cylinder properties
         x = 0;
         y = 0;
@@ -29,26 +29,36 @@ classdef cndr
         
         
         %Activation Functions
+        Htype = 'const'
         H = 1
-        G = 1
         
-        type = 'const'
+        Gtype = 'const'
+        G = 1
         
         %Decay Function
         decay = @(r) 1;
         ext = 1;
     end
     
+
     
-    
-    methods
+    methods 
         
         
         function [u,v] = comp(self,posx,posy)
             
             range = sqrt((self.x-posx)^2+(self.y-posy)^2);
-            [self.G,self.H] = getGH(self,range);
-            
+            [self.G,self.H] = getHG(self,range);
+           
+%              if range > self.r+self.e %|| range < self.r-self.e 
+%                  self.G = 1;
+%                  self.H = 1;
+%              elseif range < self.r-self.e
+%                      self.H = 0;
+%              else
+%                  self.G = 0.5/range;
+%                  self.H = 1;
+%              end
             
             Vconv = ((self.a1(posx-self.x,posy-self.y,self.r)*self.g1(posx-self.x,posy-self.y)) + self.a2(self.z)*self.g2());
             Vcirc = (cross(self.g1(posx-self.x,posy-self.y),self.g2()));
@@ -60,16 +70,16 @@ classdef cndr
             else
                 Vt = -self.G*Vconv+self.H*Vcirc;
             end
-            
-            %             range = sqrt((self.x-posx)^2+(self.y-posy)^2);
+           
+%             range = sqrt((self.x-posx)^2+(self.y-posy)^2);
             mag = norm(Vt);
             u =   self.decay(range)*Vt(1)/mag;
             v =   self.decay(range)*Vt(2)/mag;
         end
         
         
-        
-        
+  
+       
         function [X,Y,U,V] = ff(self) %Output entire vector field
             U = NaN(length(self.xspace),length(self.yspace));
             V = NaN(length(self.xspace),length(self.yspace));
@@ -88,30 +98,28 @@ classdef cndr
         end
         
         
+
         
+% ===================== Activation and Decay Functions ===================
+
+
+    function H = getH(self,range)
+    
+    
+end
+    function self = modH(self,varargin)
         
-        % ===================== Activation and Decay Functions ===================
-        
-        
-        function [G,H] = getGH(self,range)
-            if strcmp(self.type,'channel')
-                if range > self.r+self.e %|| range < self.r-self.e
-                    G = 1;
-                    H = 1;
-                elseif range < self.r-self.e
-                    H = 0;
-                    G = self.G;
-                else
-                    G = 0.5/range;
-                    H = 1;
-                end
-            end
-            if strcmp(self.type,'const')
-                G = 1;
-                H = 1;
-            end
+        if strcmp(varargin(1),'const') == 1
+            self.const = varargin{2}(1);
+            self.H = @(r) self.const;
         end
         
+        if strcmp(varargin(1),'off') == 1
+            self.H = @(r) 0;
+        end            
+            
+    end
+
         function self = modDecay(self,type)
             if strcmp(type,'none') == 1
                 self.decay = @(r) 1;
@@ -124,14 +132,14 @@ classdef cndr
         end
         
         
-        % ====================== Plotting Functions ==============================%
+% ====================== Plotting Functions ==============================%
         function pltfnc(self)
-            theta = 0:0.01:2*pi;
-            cxs = self.x+self.r*cos(theta);
-            cys = self.y+self.r*sin(theta);
-            plot(cxs,cys,'r','linewidth',2);
+           theta = 0:0.01:2*pi;
+           cxs = self.x+self.r*cos(theta);
+           cys = self.y+self.r*sin(theta);
+           plot(cxs,cys,'r','linewidth',2);
         end
-        
+          
         
         function pltDecay(self)
             theta = 0:0.05:2*pi;

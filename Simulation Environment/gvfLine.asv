@@ -1,7 +1,5 @@
-%Arbitrary line
 
-
-classdef xycurve   
+classdef gvfLine  
     properties
         active = true
         
@@ -29,13 +27,13 @@ classdef xycurve
         
         %Define the surfaces
         theta = 0
-        a1 = @(x,y,r) 0*x+0.5*y;
-        a2 = @(z) z;
+
         
         %Define the gradiants of the surfaces
         g1 = @(x,y) [0*0.5;1;0];
         g2 = @() [0;0;1];
-        
+
+
         %Activation Function
         act = 1;
         ext = 1;
@@ -45,17 +43,24 @@ classdef xycurve
     
     methods 
         
-        function beta = head(self,posx,posy) %Generate heading for single point
-
-             vec = -self.G*((self.a1(posx,posy,self.r)*self.g1(posx,posy)) + self.a2(self.z)*self.g2()) + self.H*(cross(self.g1(posx,posy),self.g2()));
-%              out = [vec(1)/mag;vec(2)/mag;vec(3)/mag];
-
-            beta = atan2(vec(2),vec(1));
-             
-        end
-        
         function [u,v] = comp(self,posx,posy)
-            vec = -self.G*((self.a1(posx-self.x,posy-self.y,self.r)*self.g1(posx-self.x,posy-self.y)) + self.a2(self.z)*self.g2()) + self.H*(cross(self.g1(posx-self.x,posy-self.y),self.g2()));
+            a = 1*cos(self.theta);
+            b = 1*sin(self.theta);
+            a1 = a*(posx-self.x)+b*(posy-self.y);
+            ga1 = [a;b;0];
+            a2 = 1;
+            ga2 = [0;0;1];
+            
+            Vconv = -self.G*(a1*ga1+a2*ga2);
+            VconvMag = norm(Vconv);
+            
+            Vcirc = cross(ga1,ga2);
+            VcircMag = norm(Vcirc);
+            
+            vec = Vconv/VconvMag+Vcirc/VcircMag;
+            
+            
+%             vec = -self.G*((self.a1(posx-self.x,posy-self.y,self.r)*self.g1(posx-self.x,posy-self.y)) + self.a2(self.z)*self.g2()) + self.H*(cross(self.g1(posx-self.x,posy-self.y),self.g2()));
             mag = sqrt(vec(1)^2+vec(2)^2);
             u = vec(1)/mag;
             v = vec(2)/mag;
@@ -83,24 +88,25 @@ classdef xycurve
         
         
         
-        % = = = = = = = =  Activation Functions = = = = = = = = = %
         
+        
+        
+        
+        
+        % = = = = = = = =  Activation Functions = = = = = = = = = %
         function  obj = modact(obj,arg)
            switch arg
                case 'on'
                    obj.act = 1;
-                   
                case 'off'
                    obj.act = 2;
                    
                case 'hyper'
                    obj.act = 3;
            end
-
         end
         
 
-        
         % = = = = = = = = Plotting Functions = = = = = = = = = =  %
         function pltr(self)
            [X,Y,u,v] = self.ff;

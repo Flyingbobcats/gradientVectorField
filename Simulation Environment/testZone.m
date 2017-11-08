@@ -3,34 +3,26 @@ clc
 clear
 close all
 
-uav = UAV;
-uav.x = -10;
-uav.y = 0;
-uav.vx = 1;
-uav.vy = 0;
-uav.v = 1;
-uav.heading = 0;
+
+vf = vectorField;
+vf = vf.newvf('line');
 
 
+THETAS = linspace(0,10*pi,200);
+XS = linspace(-10,10,100);
+XS = [XS,linspace(10,-10,100)];
 
-env = vectorField;
-env = env.newvf('circ');
+YS = linspace(-10,10,100);
+YS = [YS,linspace(10,-10,100)];
+
 
 figure
-env.pltff;
-axis equal
-hold on
-
-for t = 1:1000
-   
-    [u,v] = env.avf{1}.comp(uav.x,uav.y);
-    heading = atan2(v,u);
-    uav = uav.update_pos(heading);
-    
-    
-    plot(uav.x,uav.y,'r.');
-    drawnow
-    
-    
+for i=1:length(XS)
+     vf.avf{1}.x = XS(i);
+     vf.avf{1}.theta = THETAS(i);
+    vf.pltff;
+    axis([-15,15,-15,15]);
+    pause(0.01);
     
 end
+

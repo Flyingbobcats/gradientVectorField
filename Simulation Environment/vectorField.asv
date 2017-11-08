@@ -25,7 +25,7 @@ classdef vectorField
             end
             
             if strcmp(type,'line')
-                self.avf{length(self.avf)+1} = gvfLine;
+                self.avf{length(self.avf)+1} = xycurve;
             end
             
             %Give new field default settings
@@ -79,13 +79,13 @@ classdef vectorField
                 return
             end
             
-            Us = cell(length(self.avf));
-            Vs = cell(length(self.avf));
+            Us = {};
+            Vs = {};
             for i = 1:length(self.avf)
                 if self.avf{i}.active == true
                 [X,Y,U,V] = self.avf{i}.ff;
-                Us{i} = U;
-                Vs{i} = V;
+                Us{end+1} = U;
+                Vs{end+1} = V;
                 end
             end
             
