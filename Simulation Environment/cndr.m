@@ -94,22 +94,27 @@ classdef cndr
         
         
         function [G,H] = getGH(self,range)
-            if strcmp(self.type,'channel')
-                if range > self.r+self.e %|| range < self.r-self.e
-                    G = 1;
-                    H = 1;
-                elseif range < self.r-self.e
-                    H = 0;
-                    G = self.G;
-                else
-                    G = 0.5/range;
-                    H = 1;
-                end
-            end
-            if strcmp(self.type,'const')
-                G = 1;
-                H = 1;
-            end
+
+               G = self.G;
+               H = self.H;
+
+
+%             if strcmp(self.type,'channel')
+%                 if range > self.r+self.e %|| range < self.r-self.e
+%                     G = 1;
+%                     H = 1;
+%                 elseif range < self.r-self.e
+%                     H = 0;
+%                     G = self.G;
+%                 else
+%                     G = 0.5/range;
+%                     H = 1;
+%                 end
+%             end
+%             if strcmp(self.type,'const')
+%                 G = 1;
+%                 H = 0;
+%             end
         end
         
         function self = modDecay(self,type)
@@ -135,8 +140,8 @@ classdef cndr
         
         function pltDecay(self)
             theta = 0:0.05:2*pi;
-            cxs = self.x+10*cos(theta);
-            cys = self.y+10*sin(theta);
+            cxs = self.x+5*cos(theta);
+            cys = self.y+5*sin(theta);
             plot(cxs,cys,'r--','linewidth',3);
         end
         

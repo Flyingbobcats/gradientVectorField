@@ -55,7 +55,7 @@ classdef gvfLine
             a2 = 1;
             ga2 = [0;0;1];
             
-            Vconv = self.G*(a1*ga1+a2*ga2);
+            Vconv = (a1*ga1+a2*ga2);
             Vcirc = cross(ga1,ga2);
 
             

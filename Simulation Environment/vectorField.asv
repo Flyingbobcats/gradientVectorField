@@ -19,18 +19,32 @@ classdef vectorField
     methods
         
         %Add a vector field
-        function self = newvf(self,type)
+        function self = navf(self,type)
             if strcmp(type,'circ')==1
             self.avf{length(self.avf)+1} = cndr;
             end
             
             if strcmp(type,'line')
-                self.avf{length(self.avf)+1} = xycurve;
+                self.avf{length(self.avf)+1} = gvfLine;
             end
-            
             %Give new field default settings
             self.avf{end}.xspace = self.xspace;
             self.avf{end}.yspace = self.yspace;
+        end
+        
+        function self = nrvf(self,type)
+            if strcmp(type,'circ')==1
+                self.rvf{length(self.rvf)+1} = cndr;
+                self.rvf{end}.G = -5;
+                self.rvf{end}.H = 0;
+            end
+            
+            if strcmp(type,'line')
+                self.rvf{length(self.rvf)+1} = gvfLine;
+            end
+            %Give new field default settings
+            self.rvf{end}.xspace = self.xspace;
+            self.rvf{end}.yspace = self.yspace;
         end
         
         
@@ -74,53 +88,97 @@ classdef vectorField
                 warning('No vector fields to sum');
                 X = NaN;
                 Y = NaN;
-                Ut = NaN;
-                Vt = NaN;
+                Uta = NaN;
+                Vta = NaN;
                 return
             end
             
-            Us = {};
-            Vs = {};
+            %Attractive Vector Fields
+            Usa = cell(length(self.avf));
+            Vsa = cell(length(self.avf));
             for i = 1:length(self.avf)
                 if self.avf{i}.active == true
                 [X,Y,U,V] = self.avf{i}.ff;
-                Us{end+1} = U;
-                Vs{end+1} = V;
+                Usa{i} = U;
+                Vsa{i} = V;
                 end
             end
             
-            Ut = zeros(length(self.xspace));
-            Vt = zeros(length(self.yspace));
-            for i = 1:length(Us)
-               for j = 1:length(Us{1})
-                    for k = 1:length(Us{1})
-                    Ut(j,k) = Ut(j,k)+Us{i}(j,k);
-                    Vt(j,k) = Vt(j,k)+Vs{i}(j,k);
+            %Repulsive Vector Fields
+            Usr = cell(length(self.rvf));
+            Vsr = cell(length(self.rvf));
+            for i = 1:length(self.rvf)
+                if self.rvf{i}.active == true
+                    [X,Y,U,V] = self.rvf{i}.ff;
+                    Usr{i} = U;
+                    Vsr{i} = V;
+                end
+            end
+            
+            Uta = zeros(length(self.xspace));
+            Vta = zeros(length(self.yspace));
+            for i = 1:length(Usa)
+               for j = 1:length(Usa{1})
+                    for k = 1:length(Usa{1})
+                    Uta(j,k) = Uta(j,k)+Usa{i}(j,k);
+                    Vta(j,k) = Vta(j,k)+Vsa{i}(j,k);
                     end
                end
             end
+            
+            Utr = zeros(length(self.xspace));
+            Vtr = zeros(length(self.yspace));
+            for i = 1:length(Usr)
+               for j = 1:length(Usr{1})
+                    for k = 1:length(Usr{1})
+                    Utr(j,k) = Utr(j,k)+Usr{i}(j,k);
+                    Vtr(j,k) = Vtr(j,k)+Vsr{i}(j,k);
+                    end
+               end
+            end
+            
+            for i = 1:length(self.xspace)
+                for j = 1:length(self.yspace)
+                    Ut(i,j) = Uta(i,j)+5*Utr(i,j);
+                    Vt(i,j) = Vta(i,j)+5*Vtr(i,j);
+                end
+            end
+            
+%             figure
+%             hold on
+%             quiver(X,Y,Uta,Vta,'b');
+%             quiver(X,Y,Utr,Vtr,'r');
+            
 
         end
         
         
-        function [x,y,u,v] = addLines(self)
-     
-            for i=1:length(self.xspace)
-                for j = 1:length(self.yspace)
-                    if self.xspace(i) < 0
-                       [u(i,j),v(i,j)]=self.avf{1}.comp(self.xspace(i),self.yspace(j));
-                       x(i,j) = self.xspace(i);
-                       y(i,j) = self.yspace(j);
-                       
-                    else
-                        [u(i,j),v(i,j)]=self.avf{2}.comp(self.xspace(i),self.yspace(j));
-                       x(i,j) = self.xspace(i);
-                       y(i,j) = self.yspace(j);
-                        
-                    end
-                end
+        
+        
+        function [Ut,Vt] = heading(self,uav)
+            
+            posx = uav.x;
+            posy = uav.y;
+            
+            %Find attractive field components
+            Ua = [];
+            Va = [];
+            for i=1:length(self.avf)
+                
+               [u,v] = self.avf{i}.comp(posx,posy);
+               Ua = sum(Ua,u);
+               Va = Va+v;
+               
+               
             end
+            
+            Ut = Ua;
+            Vt = Va;
+            
         end
+        
+        
+       
 
        
         
