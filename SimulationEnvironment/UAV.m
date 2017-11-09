@@ -2,6 +2,10 @@ classdef UAV
 
     properties
         useDubins = true
+        pltQuiver = true
+        colorMarker = 'k.';
+        quiverColor = 'r';
+        
         heading_rate_max = 0.1;
         v = 1;
         dt = 0.1;
@@ -33,9 +37,7 @@ classdef UAV
     
     methods
         
-        function self =  update_pos(self,vf)
-            
-            
+        function self =  update_pos(self,vf) 
             if self.useDubins == true
                 theta = atan2(self.vy,self.vx);
                 if abs(theta - vf) < pi
@@ -66,6 +68,7 @@ classdef UAV
             %Update History
             self.xs(end+1) = self.x;
             self.ys(end+1) = self.y;
+            self.heading = theta;
             self.vxs(end+1) = self.vx;
             self.vys(end+1) = self.vy;
             self.headings(end+1) = theta;
@@ -75,6 +78,23 @@ classdef UAV
         end
         
          
+        
+        function pltUAV(self)
+            
+            plot(self.x,self.y,self.colorMarker);
+            
+            if self.pltQuiver
+                U = cos(self.heading);
+                V = sin(self.heading);
+                quiver(self.x,self.y,U,V,self.quiverColor,'linewidth',2,'maxHeadSize',10);
+            end
+            
+        end
+            
+            
+        
+        
+        
     end
     
 end

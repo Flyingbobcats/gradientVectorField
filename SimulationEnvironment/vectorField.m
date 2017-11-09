@@ -48,12 +48,6 @@ classdef vectorField
         end
         
         
-        
-        
-        
-        
-        
-        
         %Change the x and y doman
         function self = xydomain(self,s,x_c,y_c,n_new)
             x_space_new = linspace(-s+x_c,s+x_c,n_new);
@@ -66,6 +60,12 @@ classdef vectorField
                self.avf{i}.xspace = x_space_new;
                self.avf{i}.yspace = y_space_new;
                self.avf{i}.n = n_new;
+            end
+            
+            for i = 1:length(self.rvf)
+                self.rvf{i}.xspace = x_space_new;
+                self.rvf{i}.yspace = y_space_new;
+                self.rvf{i}.n = n_new;
             end
                       
         end
@@ -139,8 +139,14 @@ classdef vectorField
             
             for i = 1:length(self.xspace)
                 for j = 1:length(self.yspace)
-                    Ut(i,j) = Uta(i,j)+10*Utr(i,j);
-                    Vt(i,j) = Vta(i,j)+10*Vtr(i,j);
+                    
+                    Ut(i,j) = Uta(i,j)+50*Utr(i,j);
+                    Vt(i,j) = Vta(i,j)+50*Vtr(i,j);
+                    
+                    N = sqrt((Ut(i,j))^2+(Vt(i,j))^2);
+                    Ut(i,j) = Ut(i,j)/N;
+                    Vt(i,j) = Vt(i,j)/N;
+                    
                 end
             end
             
@@ -206,8 +212,8 @@ classdef vectorField
             
             for i = 1:length(1)
                 for j = 1:length(1)
-                    Ut(i,j) = Uta(i,j)+10*Utr(i,j);
-                    Vt(i,j) = Vta(i,j)+10*Vtr(i,j);
+                    Ut(i,j) = Uta(i,j)+50*Utr(i,j);
+                    Vt(i,j) = Vta(i,j)+50*Vtr(i,j);
                 end
             end
             
