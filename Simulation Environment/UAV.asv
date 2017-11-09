@@ -1,34 +1,20 @@
 classdef UAV
 
     properties
-        useDubins = true
-        heading_rate_max = 0.1;
-        v = 1;
-        dt = 0.1;
-        t = 0;
+        useDubins = false
         
-        turnrate = 0.3;
-        
-        %Current state
         x = [];
-        y = [];    
+        y = [];
+        
         vx = [];
         vy = [];
         heading = [];
         
-        %History
-        xs = [];
-        ys = [];
-        vxs = [];
-        vys = [];
-        headings = [];
-        headingcmds = [];
-        ts = [];
+        heading_rate_max = 0.1;
         
-        
-
-        
-
+        v = 1;
+        dt = 0.1;
+        turnrate = 0.3;
     end
     
     methods
@@ -51,8 +37,9 @@ classdef UAV
                         theta = theta - self.turnrate*self.dt;
                     end
                 end
+                
             else
-                theta = vf;
+                theta = v
             end
             
            
@@ -62,16 +49,6 @@ classdef UAV
             
             self.x = self.x+self.vx*self.dt;
             self.y = self.y+self.vy*self.dt;
-            
-            %Update History
-            self.xs(end+1) = self.x;
-            self.ys(end+1) = self.y;
-            self.vxs(end+1) = self.vx;
-            self.vys(end+1) = self.vy;
-            self.headings(end+1) = theta;
-            self.headingcmds(end+1) = vf;
-            self.t=self.t+self.dt;
-            self.ts(end+1)=self.t;
         end
         
          

@@ -98,48 +98,19 @@ classdef gvfLine
         
         
         
-        
-        
-        
-        % = = = = = = = =  Activation Functions = = = = = = = = = %
-        function  obj = modact(obj,arg)
-           switch arg
-               case 'on'
-                   obj.act = 1;
-               case 'off'
-                   obj.act = 2;
-                   
-               case 'hyper'
-                   obj.act = 3;
-           end
-        end
-        
-
         % = = = = = = = = Plotting Functions = = = = = = = = = =  %
-        function pltr(self)
-           [X,Y,u,v] = self.ff;
-            quiver(X,Y,u,v,'r')
-            axis equal
-        end
-        
-          function pltb(self)
-           [X,Y,u,v] = self.ff;
-            quiver(X,Y,u,v,'b')
-            axis equal
-        end
         
         function pltfnc(self)
-           theta = 0:0.01:2*pi;
-           cxs = self.x+self.r*cos(theta);
-           cys = self.y+self.r*sin(theta);
+           th = 0:0.01:2*pi;
+           cxs = self.x+self.r*cos(th);
+           cys = self.y+self.r*sin(th);
            plot(cxs,cys,'r','linewidth',2);
         end
         
         function pltcndr(self)
-           
-            theta = 0:0.05:2.1*pi;
-            cxs = self.x+self.r*cos(theta);
-            cys = self.y+self.r*sin(theta);
+            th = 0:0.05:2.1*pi;
+            cxs = self.x+self.r*cos(th);
+            cys = self.y+self.r*sin(th);
             plot(cxs,cys,'r','linewidth',3);
         end
         
