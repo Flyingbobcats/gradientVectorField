@@ -1,5 +1,5 @@
 
-function saveplots(F)
+function saveplots(F,format)
 figures = F; 
 figSize = [21, 29];            % [width, height]
 figUnits = 'Centimeters';
@@ -12,6 +12,6 @@ for f = 1:numel(figures)
       set(fig, 'Position', pos);
       % Output the figure
       
-      saveas(fig,num2str(f), 'fig');
+      saveas(fig,num2str(f), format);
 end
 end
