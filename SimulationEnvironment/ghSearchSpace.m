@@ -57,9 +57,11 @@ c = cell2mat(COSTS);
 [row,column] = ind2sub(size(c),index);
 
 
+F = figure;
 vf = vectorField;
 vf = vf.navf('line');
 vf.avf{1}.theta = pi/2;
+vf = vf.xydomain(20,0,0,50);
 
 vf = vf.nrvf('circ');
 vf.rvf{1}.r = 0.1;
@@ -68,8 +70,7 @@ vf.rvf{1}.H = Hs(row);
 vf.rvf{1}.G = Gs(column);
 vf.rvf{1}.active = true;
 
-vf.pltff
-vf.rvf{1}.pltDecay
+
 
 uav = UAV;
 uav.x = -10;
@@ -81,6 +82,8 @@ uav.heading = 0;
 
 
 hold on
+vf.pltff
+vf.rvf{1}.pltDecay
 while uav.x<20
     [u,v] = vf.heading(uav);
     heading = atan2(v,u);

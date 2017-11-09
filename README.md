@@ -2,6 +2,8 @@
 
 Brute force search for lowest cost for a simple scenario. Run ghSearchSpace.m for example
 
+![Alt text](SimulationEnvironment/singleObstacleLowestCost.png?raw=true "Optional Title")
+
 - Vector fields handled by vectorField class
 - vf = vectorField
 - Add new attractive field   vf = vf.navf('line');
