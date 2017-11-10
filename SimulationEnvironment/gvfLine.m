@@ -26,7 +26,7 @@ classdef gvfLine
         yspace = linspace(-10,10,25);
         
         %Define the surfaces
-        theta = 0
+        angle = 0
 
         
         %Define the gradiants of the surfaces
@@ -48,8 +48,8 @@ classdef gvfLine
             
             range = 1;
             
-            a = 1*cos(self.theta);
-            b = 1*sin(self.theta);
+            a = 1*cos(self.angle);
+            b = 1*sin(self.angle);
             a1 = a*(posx-self.x)+b*(posy-self.y);
             ga1 = [a;b;0];
             a2 = 1;

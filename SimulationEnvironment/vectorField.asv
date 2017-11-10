@@ -249,16 +249,9 @@ classdef vectorField
             quiver(x,y,u,v);
             axis equal
         end
-        
         function pltPaths(self)
             for i = 1:length(self.avf)
                 self.avf{i}.pltfnc;
-            end
-        end
-        
-        function pltDecay(self)
-            for i = 1:length(self.rvf)
-               self.rvf{i}.pltDecay; 
             end
         end
         %%%% ============= Helper / Debugger Functions ======================

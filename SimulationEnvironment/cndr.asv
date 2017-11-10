@@ -165,7 +165,7 @@ classdef cndr
             theta = 0:0.05:2*pi;
             cxs = self.x+5*cos(theta);
             cys = self.y+5*sin(theta);
-            plot(cxs,cys,'r--',self.x,self.y,'r*','linewidth',3);
+            plot(cxs,cys,'r--','linewidth',3,self.x,self.y,'r*');
             
         end
         
