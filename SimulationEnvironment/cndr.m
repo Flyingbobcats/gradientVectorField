@@ -95,26 +95,25 @@ classdef cndr
         
         function [G,H] = getGH(self,range)
 
+            if strcmp(self.type,'const')
                G = self.G;
                H = self.H;
+            end
 
 
-%             if strcmp(self.type,'channel')
-%                 if range > self.r+self.e %|| range < self.r-self.e
-%                     G = 1;
-%                     H = 1;
-%                 elseif range < self.r-self.e
-%                     H = 0;
-%                     G = self.G;
-%                 else
-%                     G = 0.5/range;
-%                     H = 1;
-%                 end
-%             end
-%             if strcmp(self.type,'const')
-%                 G = 1;
-%                 H = 0;
-%             end
+                        if strcmp(self.type,'channel')
+                            if range > self.r+self.e %|| range < self.r-self.e
+                                G = 1;
+                                H = 1;
+                            elseif range < self.r-self.e
+                                H = 0;
+                                G = self.G;
+                            else
+                                G = 0.5/range;
+                                H = 1;
+                            end
+                        end
+
         end
         
         function self = modDecay(self,type)

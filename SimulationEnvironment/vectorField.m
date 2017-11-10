@@ -146,16 +146,8 @@ classdef vectorField
                     N = sqrt((Ut(i,j))^2+(Vt(i,j))^2);
                     Ut(i,j) = Ut(i,j)/N;
                     Vt(i,j) = Vt(i,j)/N;
-                    
                 end
             end
-            
-%             figure
-%             hold on
-%             quiver(X,Y,Uta,Vta,'b');
-%             quiver(X,Y,Utr,Vtr,'r');
-            
-
         end
         
         
@@ -165,7 +157,6 @@ classdef vectorField
             
             posx = uav.x;
             posy = uav.y;
-            
             
             Usa = cell(length(self.avf));
             Vsa = cell(length(self.avf));
@@ -216,9 +207,6 @@ classdef vectorField
                     Vt(i,j) = Vta(i,j)+50*Vtr(i,j);
                 end
             end
-            
- 
-            
         end
          
 
