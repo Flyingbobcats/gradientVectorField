@@ -5,7 +5,7 @@
 clc
 clear
 close all
-F = figure
+F = figure;
 hold on
 %Initialize the vector field
 vf = vectorField;
@@ -18,7 +18,7 @@ vf.avf{1}.angle = pi/2;
 %Place a circulat obstacle centered on the path
 vf = vf.nrvf('circ');
 vf.rvf{1} = vf.rvf{1}.modDecay('hyper');
-vf.rvf{1}.H = 10;
+vf.rvf{1}.H = 0;
 vf.rvf{1}.r = 0.1;
 vf.rvfWeight = 50;
 
@@ -60,7 +60,7 @@ end
 axis([-15,35,-10,10]);
 xlabel('East');
 ylabel('North');
-title('No circulation');
+title(' No Circulation');
 
 
 
