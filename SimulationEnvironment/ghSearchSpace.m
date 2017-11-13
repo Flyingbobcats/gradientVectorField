@@ -1,5 +1,6 @@
 %Explore G and H combinations and their effect on total distance
 
+tic
 clc
 clear
 close all
@@ -55,7 +56,7 @@ end
 c = cell2mat(COSTS);
 [minCost, index] = min(c(:));
 [row,column] = ind2sub(size(c),index);
-
+toc
 
 F = figure;
 vf = vectorField;
@@ -92,6 +93,8 @@ while uav.x<20
         axis([-20,20,-10,10]);
         drawnow
 end
+
+
 
 
 
