@@ -38,7 +38,7 @@ classdef cndr
         type = 'const'
         
         %Decay Function
-        rDecay = 5
+        decayR = 5
         decay = @(r) 1;
         ext = 1;
     end
@@ -147,7 +147,7 @@ classdef cndr
             end
             
             if strcmp(type,'hyper') == 1
-                self.decay = @(r) (1+tanh(-3.5*r/self.rDecay));
+                self.decay = @(r) (1+tanh(-3.5*r/self.decayR));
             end
             
         end
@@ -164,8 +164,8 @@ classdef cndr
         
         function pltDecay(self)
             theta = 0:0.05:2*pi;
-            cxs = self.x+self.rDecay*cos(theta);
-            cys = self.y+self.rDecay*sin(theta);
+            cxs = self.x+self.decayR*cos(theta);
+            cys = self.y+self.decayR*sin(theta);
             plot(cxs,cys,'r--',self.x,self.y,'r*','linewidth',3);
             
         end
