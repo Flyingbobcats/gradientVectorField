@@ -147,7 +147,7 @@ classdef cndr
             end
             
             if strcmp(type,'hyper') == 1
-                self.decay = @(r) (1+tanh(-3.5*r/self.decayR));
+                self.decay = @(r) 0.5*(1-tanh(7*r/self.decayR-4));
             end
             
         end

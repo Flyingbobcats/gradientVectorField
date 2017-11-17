@@ -12,6 +12,15 @@ function vectorFieldObject = loadField(v,options)
         v.rvf{1}.r = 0.1;
         v.rvf{1} = v.rvf{1}.modDecay('hyper');
         
+     
+    elseif strcmp(options,'circOps')
+        v = v.nrvf('circ');
+        v.rvf{1}.r = 0.1;
+        v.rvf{1} = v.rvf{1}.modDecay('hyper');
+        v.NormSummedFields = false;
+        
+
+        
     else
         str = strcat(options, ' is not a valid input argument');
         warning(str);

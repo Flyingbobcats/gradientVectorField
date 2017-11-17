@@ -18,7 +18,7 @@ classdef vectorField
         normRepulsiveFields  = false
         
         avfWeight = 1;
-        rvfWeight = 2;
+        rvfWeight = 1;
         avf = {};
         rvf = {};
         
