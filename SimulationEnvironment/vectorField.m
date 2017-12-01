@@ -242,9 +242,9 @@ classdef vectorField
         %=================== Plotting ====================================%
         function pltff(self)
             [x,y,u,v] = self.sumFields;   
-            if sum(isnan(u(:))) > 0 || sum(isnan(v(:))) > 0
-               warning('sumFields returned NaN'); 
-            end
+%             if sum(isnan(u(:))) > 0 || sum(isnan(v(:))) > 0
+%                warning('sumFields returned NaN'); 
+%             end
             
             quiver(x,y,u,v);
             axis equal
@@ -255,6 +255,7 @@ classdef vectorField
                 self.avf{i}.pltfnc;
             end
         end
+        
         
         function pltDecay(self)
             for i = 1:length(self.rvf)

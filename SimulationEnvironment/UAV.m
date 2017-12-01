@@ -6,12 +6,11 @@ classdef UAV
         colorMarker = 'k.';
         quiverColor = 'r';
         
-        heading_rate_max = 0.1;
         v = 1;
         dt = 0.1;
         t = 0;
         
-        turnrate = 0.3;
+        turnrate = 0.35;
         
         %Current state
         x = [];
@@ -28,11 +27,6 @@ classdef UAV
         headings = [];
         headingcmds = [];
         ts = [];
-        
-        
-
-        
-
     end
     
     methods

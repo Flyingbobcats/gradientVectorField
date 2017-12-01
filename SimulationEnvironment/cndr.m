@@ -11,6 +11,8 @@ classdef cndr
         x = 0;
         y = 0;
         r = 3;
+        vx = 0
+        vy = 0;
         e  =0.5;
         
         const
@@ -18,9 +20,12 @@ classdef cndr
         z = 1;
         
         %Space properties
-        n = 25;
-        xspace = linspace(-10,10,50);
-        yspace = linspace(-10,10,50);
+        n = 50;
+        xspace = linspace(-35,35,50);
+        yspace = linspace(-35,35,50);
+        
+        localWidth = 10;
+        localHeight = 10;
         
         %Define the surfaces
         a1 = @(x,y,r) x^2+y^2-r^2;
@@ -34,6 +39,7 @@ classdef cndr
         %Activation Functions
         H = 1
         G = 1
+        L = 1
         
         type = 'const'
         
@@ -58,20 +64,34 @@ classdef cndr
             Vconv = ((self.a1(posx-self.x,posy-self.y,self.r)*self.g1(posx-self.x,posy-self.y)) + self.a2(self.z)*self.g2());
             Vcirc = (cross(self.g1(posx-self.x,posy-self.y),self.g2()));
             
+            Vtv = ((-2*self.vx*(posx-self.x)-2*self.vy*(posy-self.y) ) / ((2*(posx-self.x))^2 + (2*(posy-self.y))^2) )*[2*(posx-self.x); 2*(posy-self.y);0];
+            Vtv = Vtv*-1;
             %Normalize each components
             if self.normComponents == true
                 VcircNorm = norm(Vcirc);
                 VconvNorm = norm(Vconv);
-                Vt = -self.G*Vconv/VconvNorm+self.H*Vcirc/VcircNorm;
+                VtvNorm = norm(Vtv);
+                
+                if VtvNorm == 0
+                     Vt = -self.G*Vconv/VconvNorm+self.H*Vcirc/VcircNorm;
+                else
+
+                Vt = -self.G*Vconv/VconvNorm+self.H*Vcirc/VcircNorm+self.L*Vtv/VtvNorm;
+                end
             else
-                Vt = -self.G*Vconv+self.H*Vcirc;
+                Vt = -self.G*Vconv+self.H*Vcirc+self.L*Vtv;
             end
             
-           %Normalize the total
+            
+            
+            
+            
+            
+            %Normalize the total
             if self.normTotal
-            N = norm(Vt);
-            u =   Vt(1)/N;
-            v =   Vt(2)/N;
+                N = norm(Vt);
+                u =   Vt(1)/N;
+                v =   Vt(2)/N;
             else
                 u = Vt(1);
                 v = Vt(1);
@@ -79,15 +99,16 @@ classdef cndr
             
             %Apply the decay function
             if self.decayActive
-                u = self.decay(range)*u;
-                v = self.decay(range)*v;
+                p = self.decay(range/self.decayR);
+                u = p*u;
+                v = p*v;
             end
             
             %Warning if the output is not a normalized vector
             if self.warningCheckNorm
                 N = norm([u,v]);
                 if N >1
-                   warning('Output is not a normalized vector'); 
+                    warning('Output is not a normalized vector');
                 end
             end
         end
@@ -95,7 +116,7 @@ classdef cndr
         
         
         
-        function [X,Y,U,V] = ff(self) 
+        function [X,Y,U,V] = ff(self)
             U = NaN(length(self.xspace),length(self.yspace));
             V = NaN(length(self.xspace),length(self.yspace));
             X = NaN(length(self.xspace),length(self.yspace));
@@ -113,32 +134,50 @@ classdef cndr
         end
         
         
+        %Used for plotting a field centered at (x,y)
+        function [X,Y,U,V] = ffLocal(self)
+            self.localWidth = self.decayR;
+            self.localHeight = self.decayR;
+            xspacelocal = linspace(-self.localWidth,self.localWidth,self.n)+self.x;
+            yspacelocal = linspace(-self.localHeight,self.localHeight,self.n)+self.y;
+            U = NaN(length(xspacelocal),length(yspacelocal));
+            V = NaN(length(xspacelocal),length(yspacelocal));
+            X = NaN(length(xspacelocal),length(yspacelocal));
+            Y = NaN(length(xspacelocal),length(yspacelocal));
+            for i = 1:length(xspacelocal)
+                for j = 1:length(yspacelocal)
+                    [u,v] = comp(self,xspacelocal(i),yspacelocal(j));
+                    vec = [u,v];
+                    U(i,j) =  vec(1);
+                    V(i,j) =  vec(2);
+                    X(i,j) = xspacelocal(i);
+                    Y(i,j) = yspacelocal(j);
+                end
+            end
+        end
+        
+        
         
         
         % ===================== Activation and Decay Functions ===================
-        
-        
         function [G,H] = getGH(self,range)
-
+            
             if strcmp(self.type,'const')
-               G = self.G;
-               H = self.H;
+                G = self.G;
+                H = self.H;
             end
-
-
-                        if strcmp(self.type,'channel')
-                            if range > self.r+self.e %|| range < self.r-self.e
-                                G = 1;
-                                H = 1;
-                            elseif range < self.r-self.e
-                                H = 0;
-                                G = self.G;
-                            else
-                                G = 0.5/range;
-                                H = 1;
-                            end
-                        end
-
+            if strcmp(self.type,'channel')
+                if range > self.r+self.e %|| range < self.r-self.e
+                    G = 1;
+                    H = 1;
+                elseif range < self.r-self.e
+                    H = 0;
+                    G = self.G;
+                else
+                    G = 0.5/range;
+                    H = 1;
+                end
+            end
         end
         
         function self = modDecay(self,type)
@@ -147,13 +186,20 @@ classdef cndr
             end
             
             if strcmp(type,'hyper') == 1
-                self.decay = @(r) 0.5*(1-tanh(7*r/self.decayR-4));
+%                 self.decay = @(r) 0.5*(1-tanh(4*r/self.decayR-4));
+                self.decay = @(r) 0.5*(1-tanh(6*r-4));
             end
             
         end
         
         
         % ====================== Plotting Functions ==============================%
+        function pltff(self)
+            [X,Y,U,V] = self.ffLocal();
+            quiver(X,Y,U,V,'r');
+        end
+        
+        
         function pltfnc(self)
             theta = 0:0.01:2*pi;
             cxs = self.x+self.r*cos(theta);
@@ -161,7 +207,7 @@ classdef cndr
             plot(cxs,cys,'r','linewidth',2);
         end
         
-        
+  
         function pltDecay(self)
             theta = 0:0.05:2*pi;
             cxs = self.x+self.decayR*cos(theta);
