@@ -1,13 +1,16 @@
-# gradientVectorField
+# gradientVectorField Validation
 
-Brute force search for lowest cost for a simple scenario. Run ghSearchSpace.m for example
+Branch for debugging and validating the gradientVectorField simulation environment for the following:
 
-![Alt text](SimulationEnvironment/nocirc.png?raw=true "Optional Title")
-![Alt text](SimulationEnvironment/circ.png?raw=true "Optional Title")
+- Circular VF (convergence, circulation, time varying)
+- Line VF (Convergence, circulation)
+- Static circular obstacle (confirm hyperbolic function)
 
-- Vector fields handled by vectorField class
-- vf = vectorField
-- Add new attractive field   vf = vf.navf('line');
-- Add new repulsive field    vf = vf.nrvf('circ');
-- Plot resultant fields      vf.pltff
+
+Other improvements to be made:
+- Improve UAV class to accept VF for position updates
+- Automatic UAV class setup (history and velocities)
+- Velocity ratios
+
+
 
