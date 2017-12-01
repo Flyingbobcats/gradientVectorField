@@ -24,6 +24,7 @@ classdef gvfLine
         n = 25;
         xspace = linspace(-10,10,25);
         yspace = linspace(-10,10,25);
+        LineDistance = 5;
         
         %Define the surfaces
         angle = 0
@@ -101,9 +102,10 @@ classdef gvfLine
         % = = = = = = = = Plotting Functions = = = = = = = = = =  %
         
         function pltfnc(self)
-           th = 0:0.01:2*pi;
-           cxs = self.x+self.r*cos(th);
-           cys = self.y+self.r*sin(th);
+           
+           d = [-self.LineDistance/2,self.LineDistance/2];
+           cxs = self.x+d*cos(self.angle-pi/2);
+           cys = self.y+d*sin(self.angle-pi/2);
            plot(cxs,cys,'r','linewidth',2);
         end
         

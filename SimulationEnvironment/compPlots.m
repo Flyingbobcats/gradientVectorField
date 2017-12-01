@@ -8,7 +8,7 @@ clear
 close all
 
 %Circular Field
-circular = false;
+circular = true;
 normsOffCirc = false;       %Will deactive ALL normilization
 
 
